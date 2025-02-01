@@ -6,24 +6,15 @@ import { GetPoints } from "../functions/getPoints";
 
 import { useScore } from "../services/apiCalls";
 
-import { Row, Table } from "../components/table";
+import { Table } from "../components/table";
 
 export default function TennisCourtPage() {
+  const player1 = JSON.parse(sessionStorage.getItem("player1"));
+  const player2 = JSON.parse(sessionStorage.getItem("player2"));
   const [listPoints, setListPoints] = useState([]);
   const [play, setPlay] = useState(false);
   const [score, setScore] = useState({});
-
-  //dummy data
-  const players = [
-    { name: "Andrew", playerNumber: 1, level: 8, sets: [6, 7, 6], score: 3 },
-    { name: "Josh", playerNumber: 2, level: 5, sets: [2, 5, 4], score: 0 },
-  ];
-
-  const listSets = [
-    [6, 7, 6],
-    [2, 5, 4],
-    [4, 6, 7],
-  ];
+  const [players, setPlayers] = useState([player1, player2]);
 
   const { mutation } = useScore();
 
@@ -40,8 +31,26 @@ export default function TennisCourtPage() {
       },
       {
         onSuccess: (data) => {
-          console.log("data", data);
           setScore(() => ({ ...data }));
+
+          setPlayers(
+            players.map((player) => {
+              if (player.id == 1) {
+                return {
+                  ...player,
+                  score: data.score1,
+                  sets: [...data.setPlayer1],
+                };
+              }
+              if (player.id == 2) {
+                return {
+                  ...player,
+                  score: data.score2,
+                  sets: [...data.setPlayer2],
+                };
+              }
+            })
+          );
         },
       }
     );
@@ -50,14 +59,15 @@ export default function TennisCourtPage() {
   return (
     <div>
       <h1>Tennis Court Page</h1>
-      <Table data={players} setsNumber={3} gameOnGoing={true} listSets={listSets}/>
-      {console.log("score", score)}
+      <Table
+        data={players}
+        gameOnGoing={score.matchWon}
+        listSets={score.sets}
+      />
       {play && (
         <ul>
           {listPoints.map((point, index) => {
-            const player = players.find(
-              (player) => player.playerNumber === point
-            );
+            const player = players.find((player) => player.id === point);
             return (
               <li key={player.name + "" + index + 1}>
                 - Point {index + 1} : remporté par {player.name}
