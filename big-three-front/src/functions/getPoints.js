@@ -22,9 +22,7 @@ export function GetPoints(players) {
 
   let listPoints = [];
 
-  let weight = players.flatMap(({ playerNumber, level }) =>
-    Array(level).fill(playerNumber)
-  );
+  let weight = players.flatMap(({ id, level }) => Array(level).fill(id));
   console.log(weight, "result");
   let lengthWeight = Number(weight.length);
   console.log(lengthWeight, "lengthArr");
