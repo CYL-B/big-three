@@ -5,20 +5,28 @@
 
 export function Button({
   onClick,
-  role = "button",
+  role,
   type = "btnAnchor",
   children,
+  href,
+  disabled = false,
   ...restProps
 }) {
   if (type == "btnAnchor") {
     return (
-      <a href="#" type={role} onClick={onClick} {...restProps}>
+      <a
+        href={href}
+        onClick={onClick}
+        type={role}
+        {...restProps}
+        disabled={disabled}
+      >
         {children}
       </a>
     );
   } else {
     return (
-      <button type={role} onClick={onClick} {...restProps}>
+      <button type={role} onClick={onClick} {...restProps} disabled={disabled}>
         {children}
       </button>
     );
