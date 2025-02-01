@@ -18,6 +18,7 @@ fastify.post("/score", async (request, reply) => {
   let deuce = false;
   let gamePlaying = [score1, score2];
   let gamesWon = [0, 0];
+  let matchWon = false;
   let sets = [];
   let setsWon1 = 0;
   let setsWon2 = 0;
@@ -62,6 +63,7 @@ fastify.post("/score", async (request, reply) => {
       gamesWon = [0, 0];
       setsWon1 += 1;
       if (setsWon1 == 3 && setsWon2 <= 2) {
+        matchWon = true;
         console.log("Match won by player1");
         break;
       }
@@ -74,6 +76,7 @@ fastify.post("/score", async (request, reply) => {
       gamesWon = [0, 0];
       setsWon2 += 1;
       if (setsWon2 == 3 && setsWon1 <= 2) {
+        matchWon = true;
         console.log("Match won by player 2");
         break;
       }
@@ -145,8 +148,9 @@ fastify.post("/score", async (request, reply) => {
     gamePlaying: gamePlaying,
     score1: score1,
     score2: score2,
-    setPlayer1:setPlayer1,
-    setPlayer2:setPlayer2
+    setPlayer1: setPlayer1,
+    setPlayer2: setPlayer2,
+    matchWon: matchWon,
   });
 });
 
